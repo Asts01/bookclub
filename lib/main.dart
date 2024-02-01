@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:bookclub/states/currentUser.dart';
 import 'package:bookclub/utils/ourTheme.dart';
 
+//commited changes
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
