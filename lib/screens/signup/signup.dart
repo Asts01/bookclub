@@ -58,6 +58,7 @@ class _SignUpState extends State<SignUp> {
             ),
             SizedBox(height: 30,),
             Container(
+              margin: EdgeInsets.symmetric(vertical: 40),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
@@ -142,27 +143,6 @@ class _SignUpState extends State<SignUp> {
                           }
                         }, child: Text('Login',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 30,fontFamily: 'Cabin'),))),
                     SizedBox(height: 10,),
-                    GestureDetector(
-                      onTap: (){
-                        Provider.of<CurrentUser>(context).signInWithGoogle(context);
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 40),
-                        width: 150,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Color(0xFFECECEC),
-                        ),
-                        child: TextButton(onPressed: (){}, child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset('assets/google.png',width: 25,height: 30,),
-                            SizedBox(width: 10,),
-                            Text('Login with Google',style: TextStyle(color: Colors.black,fontSize: 14),),
-                          ],
-                        )),
-                      ),
-                    ),
                   ],
                 ),
               ),

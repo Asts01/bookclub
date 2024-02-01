@@ -17,10 +17,25 @@ enum LoginType{
 class _OurLoginScreenState extends State<OurLoginScreen> {
   TextEditingController _emailController=TextEditingController();
   TextEditingController _passwordController=TextEditingController();
-  void _loginUser(String email,String password,context)async{
-    var _user=await Provider.of<CurrentUser>(context,listen: false).loginUser(email, password);
+
+  void _loginUser(
+      {required LoginType type,
+      String? email,
+      String? password,
+      context})async{
+    var _currentUser=Provider.of<CurrentUser>(context,listen: false);
     try{
-      if(_user=="success"){
+      var _retString;
+      switch (type){
+        case LoginType.email:
+          _retString=await _currentUser.loginUser(email!, password!);
+          break;
+        case LoginType.google:
+          _retString=await _currentUser.loginUserWithGoogle();
+          break;
+        default:
+      }
+      if(_retString=="success"){
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -28,7 +43,7 @@ class _OurLoginScreenState extends State<OurLoginScreen> {
       }else{
         final snackBar = SnackBar(
           backgroundColor: Colors.brown,
-          content: Center(child: Text(_user,style: TextStyle(fontFamily: 'Cabin',fontWeight: FontWeight.bold),)),
+          content: Center(child: Text(_retString,style: TextStyle(fontFamily: 'Cabin',fontWeight: FontWeight.bold),)),
           duration: Duration(seconds: 4),
 
         );
@@ -95,13 +110,18 @@ class _OurLoginScreenState extends State<OurLoginScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                         child: TextButton(onPressed: (){
-                          _loginUser(_emailController.text,_passwordController.text,context);
+                          _loginUser(
+                            type: LoginType.email,
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                            context: context,
+                          );
 
                         }, child: Text('Login',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),))),
                     SizedBox(height: 10,),
                     GestureDetector(
                       onTap: (){
-                        Provider.of<CurrentUser>(context).signInWithGoogle(context);
+                        _loginUser(type: LoginType.google);
                       },
                       child: Container(
                         margin: EdgeInsets.symmetric(horizontal: 40),
@@ -110,7 +130,9 @@ class _OurLoginScreenState extends State<OurLoginScreen> {
                           borderRadius: BorderRadius.circular(20),
                           color: Color(0xFFECECEC),
                         ),
-                        child: TextButton(onPressed: (){}, child: Row(
+                        child: TextButton(onPressed: (){
+                          _loginUser(type: LoginType.google,context: context);
+                        }, child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset('assets/google.png',width: 25,height: 30,),

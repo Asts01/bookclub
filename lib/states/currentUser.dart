@@ -41,29 +41,27 @@ class CurrentUser extends ChangeNotifier{
     }
     return retval;
   }
-  Future<String> loginUserWithGoogle(String email,String password) async{
-    String retval="";
-    const List<String> scopes = <String>[
-      'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
-    ];
-
-    GoogleSignIn _googleSignIn = GoogleSignIn(
-      scopes: scopes,
-    );
-    try{
-      GoogleSignInAccount? _googleUser=await _googleSignIn.signIn();
-      GoogleSignInAuthentication _googleAuth=await _googleUser!.authentication;
-      final AuthCredential credential=GoogleAuthProvider.credential(idToken: _googleAuth.idToken,accessToken:_googleAuth.accessToken );
-      var _authResult=await _auth.signInWithCredential(credential);
-      _uid=_authResult.user!.uid;
-      _email=_authResult.user!.email;
-      retval="success";
-    }catch(e){retval=e.toString();}
-    return retval;
-  }
-
-  signInWithGoogle(BuildContext context) async {
+  Future<String> loginUserWithGoogle() async {
+    String retval = "";
+    // const List<String> scopes = <String>[
+    //   'email',
+    //   'https://www.googleapis.com/auth/contacts.readonly',
+    // ];
+    //
+    // GoogleSignIn _googleSignIn = GoogleSignIn(
+    //   scopes: scopes,
+    // );
+    // try{
+    //   GoogleSignInAccount? _googleUser=await _googleSignIn.signIn();
+    //   GoogleSignInAuthentication _googleAuth=await _googleUser!.authentication;
+    //   final AuthCredential credential=GoogleAuthProvider.credential(idToken: _googleAuth.idToken,accessToken:_googleAuth.accessToken );
+    //   var _authResult=await _auth.signInWithCredential(credential);
+    //   _uid=_authResult.user!.uid;
+    //   _email=_authResult.user!.email;
+    //   retval="success";
+    //   return retval;
+    // }catch(e){retval=e.toString();}
+    // return retval;
     final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     final GoogleSignIn googleSignIn = GoogleSignIn();
 
@@ -82,12 +80,10 @@ class CurrentUser extends ChangeNotifier{
     User? userDetails = result.user;
 //get details from google-credential
     if (result != null) {
-
-      //save to database user details gathered from google-credentials
-
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) =>HomeScreen()));
-
+      retval="success";
+    }else{
+      retval="error";
     }
+    return retval;
   }
 }
