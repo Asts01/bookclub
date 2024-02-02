@@ -36,10 +36,7 @@ class _OurLoginScreenState extends State<OurLoginScreen> {
         default:
       }
       if(_retString=="success"){
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreen()), (route) => false);
       }else{
         final snackBar = SnackBar(
           backgroundColor: Colors.brown,

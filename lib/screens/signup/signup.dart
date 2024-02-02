@@ -17,9 +17,9 @@ class _SignUpState extends State<SignUp> {
   TextEditingController _passwordController=TextEditingController();
   TextEditingController _confirmPasswordController=TextEditingController();
 
-  void _signUpUser(String email,String password,context) async{
+  void _signUpUser(String email,String password,String name,context) async{
     //listen for not updating ui
-    var _currUser=await Provider.of<CurrentUser>(context,listen: false).signUpUser(email, password);
+    var _currUser=await Provider.of<CurrentUser>(context,listen: false).signUpUser(email, password,name);
     try{
       if(_currUser=="success"){
         //send user back to loginScreen
@@ -131,7 +131,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                         child: TextButton(onPressed: (){
                           if(_passwordController.text==_confirmPasswordController.text){
-                            _signUpUser(_emailController.text,_passwordController.text,context);
+                            _signUpUser(_emailController.text,_passwordController.text,_nameController.text,context);
                           }else{
                             final snackBar = SnackBar(
                               backgroundColor: Colors.brown,

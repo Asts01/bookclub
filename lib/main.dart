@@ -1,5 +1,5 @@
+import 'package:bookclub/screens/root/root.dart';
 import 'package:flutter/material.dart';
-import 'package:bookclub/screens/login/login.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:bookclub/states/currentUser.dart';
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ourTheme().buildTheme(),
-        home: OurLoginScreen(),
+        home: OurRoot(),
       ),
     );
   }
