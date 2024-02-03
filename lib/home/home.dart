@@ -177,7 +177,7 @@ class HomeScreen extends StatelessWidget {
               color: Colors.grey,
             ),
             child: TextButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>OurRoot()));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>NoGroup()));
             }, child: Text('Book Club History',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),)),
           ),
           Container(

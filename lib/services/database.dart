@@ -42,4 +42,40 @@ class OurDatabase{
     }
     return retVal;
   }
+  Future<String> CreateGrp(String groupName,dynamic uid) async{
+    String retVal="error";
+    List<String> _members = [];
+    try{
+      _members.add(uid);
+      DocumentReference _docRef=await _firestore.collection('groups').add({
+        'name':groupName,
+        'leader':uid,
+        'members':_members,
+        'groupCreated':Timestamp.now(),
+      });
+      //update grp id for document->user
+      await _firestore.collection('users').doc(uid).update({
+        'groupId':_docRef.id,
+      });
+      retVal="success";
+    }catch(e){print(e);}
+    return retVal;
+  }
+  Future<String> JoinGrp(String groupId,dynamic uid) async{
+    String retVal="error";
+    List<String>_members=[];
+    try{
+      //get collection groups->groupId->members.add(new uid)
+      //now add the groupId of this user to users collection
+      _members.add(uid);
+      await _firestore.collection('groups').doc(groupId).update({
+        'members':FieldValue.arrayUnion(_members),
+      });
+      await _firestore.collection('users').doc(uid).update({
+        'groupId':groupId,
+      });
+      retVal="success";
+    }catch(e){print(e);}
+    return retVal;
+  }
 }
