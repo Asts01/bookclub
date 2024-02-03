@@ -1,8 +1,8 @@
+import 'package:bookclub/screens/root/root.dart';
 import 'package:bookclub/states/currentUser.dart';
 import 'package:flutter/material.dart';
 import 'package:bookclub/utils/ourTheme.dart';
 import 'package:bookclub/screens/signup/signup.dart';
-import 'package:bookclub/home/home.dart';
 import 'package:provider/provider.dart';
 
 class OurLoginScreen extends StatefulWidget {
@@ -36,7 +36,7 @@ class _OurLoginScreenState extends State<OurLoginScreen> {
         default:
       }
       if(_retString=="success"){
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomeScreen()), (route) => false);
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OurRoot()), (route) => true);
       }else{
         final snackBar = SnackBar(
           backgroundColor: Colors.brown,

@@ -2,6 +2,7 @@ import 'package:bookclub/models/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 class OurDatabase{
   final FirebaseFirestore _firestore=FirebaseFirestore.instance;//new instnce of cloud firestore
+  //saves data to the cloud-firestore
   Future<String> createUser(OurUser user) async{
     String retVal="error";
     try{
@@ -17,6 +18,7 @@ class OurDatabase{
     }catch(e){print(e);}
     return retVal;
   }
+  //tells whether user with particular uid exists in the firebase and returns the OurUser model
   Future<OurUser> getUserInfo(String uid) async {
     OurUser retVal = OurUser(); // Assuming OurUser() is the constructor for your OurUser class
     try {
@@ -29,6 +31,7 @@ class OurDatabase{
         retVal.fullName = data['fullName'] ?? '';
         retVal.email = data['email'] ?? '';
         retVal.accountCreated = data['accountCreated'] ?? '';
+        retVal.groupId=data['groupId']??'';
       } else {
         // Document does not exist
         print('Document does not exist for UID: $uid');

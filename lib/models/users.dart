@@ -4,6 +4,7 @@ class OurUser{
   String ?email;
   String ?fullName;
   Timestamp ?accountCreated;//data-type defined for cloud-firestore
+  String ?groupId;
 
-  OurUser({this.uid,this.email,this.accountCreated,this.fullName});
+  OurUser({this.uid,this.email,this.accountCreated,this.fullName,this.groupId});
 }

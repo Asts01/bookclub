@@ -1,23 +1,38 @@
+import 'package:bookclub/screens/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:bookclub/utils/ourTheme.dart';
+import 'package:bookclub/screens/root/root.dart';
+import 'package:provider/provider.dart';
+import 'package:bookclub/states/currentUser.dart';
 
 class NoGroup extends StatelessWidget {
   const NoGroup({super.key});
 
+  void _signOut(BuildContext context)async{
+    var _currentUser=Provider.of<CurrentUser>(context,listen: false);
+    String retVal=await _currentUser.onLogOut();
+    if(retVal=="success"){
+      //we want our homeScreen to be incharge of where we need to go
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OurRoot()),(route)=>false);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ourTheme().lightGreen,
-      body: Padding(
-        padding: const EdgeInsets.only(top:220,left: 35,right: 25),
-        child: Center(
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.only(left: 30,right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(height: 40,),
+              TextButton(onPressed: ()=>_signOut(context), child: Text('Sign-out')),
+              SizedBox(height: 70,),
               Image.asset('assets/book.png'),
               SizedBox(height: 10,),
-              Text('Welcome to\n Book Club',style: TextStyle(
+              Text('Welcome to\n Convene',style: TextStyle(
                 color: Colors.grey,
                 fontSize: 40,
                 fontWeight: FontWeight.bold,

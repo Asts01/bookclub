@@ -6,20 +6,20 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 //Instead of displaying the manual SnackBar error msg->display the error msg
 class CurrentUser extends ChangeNotifier{
+  //all the methods of login & sign-up sets the status of the currentUser inside the app
   OurUser _currentUser=OurUser();
   //local state saving for email & password
-
+  OurUser get getCurrentUser{return _currentUser;}
   FirebaseAuth _auth=FirebaseAuth.instance;
   //async functions returns Future as return type
   Future<String> signUpUser(String email,String password,String fullName) async{
-    String retval="";
-    OurUser _user=OurUser();
+    String retval="error";
     try{
       var authResult=await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      _user.uid=authResult.user!.uid;
-      _user.email=authResult.user!.email;
-      _user.fullName=fullName;
-      String isUserIndb=await OurDatabase().createUser(_user);//created user in db
+      _currentUser.uid=authResult.user!.uid;
+      _currentUser.email=authResult.user!.email;
+      _currentUser.fullName=fullName;
+      String ?isUserIndb=await OurDatabase().createUser(_currentUser);//created user in db
       if(isUserIndb=="success")retval="success";
     }catch(e){
       retval=e.toString();
@@ -32,9 +32,9 @@ class CurrentUser extends ChangeNotifier{
     String retVal="error";
     try{
       var _firebaseUser=await _auth.currentUser;
-      _currentUser.uid=_firebaseUser?.uid;
-      _currentUser.email=_firebaseUser!.email;
-      _currentUser=await OurDatabase().getUserInfo(_auth.currentUser!.uid);
+      // _currentUser.uid=_firebaseUser?.uid;
+      // _currentUser.email=_firebaseUser!.email;
+      _currentUser=await OurDatabase().getUserInfo(_firebaseUser!.uid);
       if(_currentUser!=null) {
         retVal = "success";
       }
@@ -46,10 +46,12 @@ class CurrentUser extends ChangeNotifier{
     //log-out the already existing user
     String retVal="error";
     try{
-      await _auth.signOut();
-      // _currentUser.uid=null;
-      // _currentUser.email=null;
-      _currentUser=OurUser();//create a new instance of user
+      await _auth.signOut();//sign-out the current auth instance
+      _currentUser.uid=null;
+      _currentUser.email=null;
+      _currentUser.groupId=null;
+      _currentUser.fullName=null;
+      _currentUser=OurUser();//create a new empty instance of user
       retVal="success";
     }catch(e){print(e);}
     return retVal;
@@ -59,11 +61,6 @@ class CurrentUser extends ChangeNotifier{
     String retval="";
     try{
       var authResult=await _auth.signInWithEmailAndPassword(email: email, password: password);
-      if(authResult!=null&&authResult.user!=null){
-        _currentUser.uid=authResult.user!.uid;
-        _currentUser.email=authResult.user!.email;
-        // retval="success";
-      }
       //checking whether the user with particular email & password exists in app
       _currentUser=await OurDatabase().getUserInfo(authResult.user!.uid);
       if(_currentUser!=null){
@@ -94,7 +91,7 @@ class CurrentUser extends ChangeNotifier{
     UserCredential result = await firebaseAuth.signInWithCredential(credential);
 
     User? userDetails = result.user;
-
+//1st tiem login-with google create entry in db
     if(result.additionalUserInfo!.isNewUser){
       _user.uid=result.user!.uid;
       _user.email=result.user!.email;
