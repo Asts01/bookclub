@@ -1,6 +1,7 @@
 import 'package:bookclub/noGroup/noGroup.dart';
 import 'package:bookclub/screens/login/login.dart';
 import 'package:bookclub/screens/splashScreen/splashScreen.dart';
+import 'package:bookclub/states/currentGroup.dart';
 import 'package:bookclub/states/currentUser.dart';
 import 'package:flutter/material.dart';
 import 'package:bookclub/home/home.dart';
@@ -64,7 +65,9 @@ class _OurRootState extends State<OurRoot> {
         retVal=NoGroup();
         break;
       case AuthStatus.inGroup:
-        retVal=HomeScreen();
+        retVal=ChangeNotifierProvider(
+          create: (context)=>CurrentGroup(),
+            child: HomeScreen());
         break;
       default:
         retVal=OurSplashScreen();

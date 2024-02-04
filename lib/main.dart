@@ -6,6 +6,8 @@ import 'package:bookclub/states/currentUser.dart';
 import 'package:bookclub/utils/ourTheme.dart';
 
 //commited changes
+//the way the CurrentUser model is provided to whole app
+//The CurrentGrp model is provided to whole root
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

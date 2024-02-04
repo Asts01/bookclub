@@ -4,9 +4,11 @@ class OurGroup{
   String ?id;
   String? name;
   String ?leader;
-  List<String> ?members;
+  List<dynamic> ?members;
   Timestamp ?groupCreated;
+  String ?currentBookId;
+  Timestamp ?currentBookDue;
 
-  OurGroup({this.id,this.name,this.leader,this.members,this.groupCreated});
+  OurGroup({this.id,this.name,this.leader,this.members,this.groupCreated,this.currentBookId,this.currentBookDue});
 
 }
