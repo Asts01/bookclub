@@ -3,8 +3,8 @@ class OurUser{
   String ?uid;
   String ?email;
   String ?fullName;
-  Timestamp ?accountCreated;//data-type defined for cloud-firestore
-  String ?groupId;
+  dynamic ?accountCreated;//data-type defined for cloud-firestore
+  String ?groupId;//allocated when user creates or joins a grp
 
   OurUser({this.uid,this.email,this.accountCreated,this.fullName,this.groupId});
 }

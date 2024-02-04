@@ -44,26 +44,30 @@ class OurDatabase{
     }
     return retVal;
   }
-  Future<String> CreateGrp(String groupName,dynamic uid) async{
+  Future<String> CreateGrp(String groupName,dynamic uid,OurBook initialBook) async{
     String retVal="error";
     List<String> _members = [];
     try{
       _members.add(uid);//add method return's reference of the user while set method don't
-      DocumentReference _docRef=await _firestore.collection('groups').add({
+      DocumentReference _docRef=await _firestore.collection('groups').add({//RETURNS REFERENCE OF GRP-ID
         'name':groupName,
         'leader':uid,
         'members':_members,
         'groupCreated':Timestamp.now(),
       });
-      //update grp id for document->user
+      //update grp id for document->user and now the user will navigate to the Home Screen
       await _firestore.collection('users').doc(uid).update({
         'groupId':_docRef.id,
       });
+      //add a book to the current grp collection
+      addBook(_docRef.id, initialBook);
       retVal="success";
     }catch(e){print(e);}
     return retVal;
   }
   Future<String> JoinGrp(String groupId,dynamic uid) async{
+    //existing rp ke memeber ne uid vala user add ho jayega
+    //uid users collection me ek naya member add ho jayega
     String retVal="error";
     List<String>_members=[];
     try{
@@ -78,6 +82,25 @@ class OurDatabase{
       });
       retVal="success";
     }catch(e){print(e);}
+    return retVal;
+  }
+  Future<String> addBook(String grpId,OurBook book) async{
+    String retVal="success";
+    //add book to the required grp can be while creating a grp initially or later modifying it
+    try{
+      DocumentReference _docRef=await _firestore.collection('groups').doc(grpId).collection('books').add({
+        'name':book.name,
+        'author':book.author,
+        'length':book.length,
+        'dateCompleted':book.dateCompleted,
+      });
+      //1 grp will only have 1 currentBookId
+      //now change the data inside groups collection
+      await _firestore.collection('groups').doc(grpId).update({
+        'currentBookId':_docRef.id,
+        'currentBookDue':book.dateCompleted,
+      });
+    }catch(e){print('book ghotala');}
     return retVal;
   }
   Future<OurGroup> getGroupInfo(String groupId)async{
@@ -113,6 +136,7 @@ class OurDatabase{
         retVal.name = data['name'] ?? '';
         retVal.length = data['length'] ?? '';
         retVal.dateCompleted = data['dateCompleted'] ?? '';
+        retVal.author=data['author']??'';
       } else {
         // Document does not exist
         print('Book does not exist for grp: $groupId');

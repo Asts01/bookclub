@@ -19,7 +19,7 @@ class OurRoot extends StatefulWidget {
 class _OurRootState extends State<OurRoot> {
   AuthStatus _authStatus=AuthStatus.unknown;//start up with(loading...) splash initially when we are fetching user info via onStrtup() method
   @override
-
+  //didChangeDependencies method is used ti update the state of varibles which are depnedent on the data provided by the provider
   void didChangeDependencies() async{
     super.didChangeDependencies();
     //get the current state and change AuthStatus based on that

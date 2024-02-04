@@ -1,9 +1,6 @@
-import 'package:bookclub/screens/root/root.dart';
-import 'package:bookclub/services/database.dart';
-import 'package:bookclub/states/currentUser.dart';
+import 'package:bookclub/screens/addBook/addBook.dart';
 import 'package:bookclub/utils/ourTheme.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class OurCreateGroup extends StatefulWidget {
   const OurCreateGroup({super.key});
@@ -15,13 +12,8 @@ class OurCreateGroup extends StatefulWidget {
 class _OurCreateGroupState extends State<OurCreateGroup> {
   TextEditingController _groupNameController=new TextEditingController();
   //function to create grp in database
-  void _createGrp(BuildContext context,String grpName) async{
-    CurrentUser _currentUser=Provider.of<CurrentUser>(context,listen: false);
-    String _returnString=await OurDatabase().CreateGrp(grpName, _currentUser.getCurrentUser.uid);
-    if(_returnString=="success"){
-      //since now grpId won't be null the user will navigate to HomeScreen
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OurRoot()), (route) => false);
-    }
+  void _goToAddBook(BuildContext context,String grpName){
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>OurAddBook(onGrpCreation: true, groupName: grpName)));
   }
   @override
   Widget build(BuildContext context) {
@@ -72,8 +64,8 @@ class _OurCreateGroupState extends State<OurCreateGroup> {
                           backgroundColor: MaterialStateProperty.all<Color>(Colors.grey), // Change this color to your desired color
                         ),
                           onPressed: (){
-                          _createGrp(context, _groupNameController.text);
-                          }, child: Text('Create',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),)),
+                          _goToAddBook(context, _groupNameController.text);
+                          }, child: Text('Add Book',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),)),
                       SizedBox(height: 20,),
                     ],
                   ),

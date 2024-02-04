@@ -36,6 +36,7 @@ class _OurLoginScreenState extends State<OurLoginScreen> {
         default:
       }
       if(_retString=="success"){
+        //successfully logged in and take to create-user screen
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OurRoot()), (route) => true);
       }else{
         final snackBar = SnackBar(
@@ -54,13 +55,13 @@ class _OurLoginScreenState extends State<OurLoginScreen> {
     return Scaffold(
       backgroundColor: ourTheme().lightGreen,
       body:Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 80),
+        padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 50),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(child: Image.asset('assets/book.png')),
+            Center(child: Image.asset('assets/book.png',width: 300,height: 250,)),
             Center(child: Text('Welcome Readers',style: TextStyle(color: Colors.brown,fontWeight: FontWeight.bold,fontSize: 30,fontFamily: 'Cabin'),)),
-            SizedBox(height:70,),
+            SizedBox(height:20,),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 10.0),
               decoration: BoxDecoration(color: Colors.white,

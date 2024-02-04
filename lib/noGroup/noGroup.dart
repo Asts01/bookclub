@@ -16,9 +16,9 @@ class NoGroup extends StatelessWidget {
   }
   void _signOut(BuildContext context)async{
     var _currentUser=Provider.of<CurrentUser>(context,listen: false);
-    String retVal=await _currentUser.onLogOut();
+    String retVal=await _currentUser.onLogOut();//will call auth.signout
     if(retVal=="success"){
-      //we want our homeScreen to be incharge of where we need to go
+      //we want our homeScreen to be incharge of where we need to go and now authStatus will be null so it would take us to login screen
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OurRoot()),(route)=>false);
     }
   }
@@ -36,7 +36,7 @@ class NoGroup extends StatelessWidget {
               SizedBox(height: 40,),
               TextButton(onPressed: ()=>_signOut(context), child: Text('Sign-out')),
               SizedBox(height: 70,),
-              Image.asset('assets/book.png'),
+              Center(child: Image.asset('assets/book.png',width: 300,height: 250,)),
               SizedBox(height: 10,),
               Text('Welcome to\n Convene',style: TextStyle(
                 color: Colors.grey,

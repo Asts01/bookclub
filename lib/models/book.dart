@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OurBook{
-  String ?id;
-  String ?name;
+  dynamic id;
+  dynamic name;
+  dynamic author;
   dynamic length;//no of pages in book
-  Timestamp ?dateCompleted;
+  dynamic dateCompleted;
   OurBook({
-    this.id,this.name,this.length,this.dateCompleted
+    this.id,this.name,this.author,this.length,this.dateCompleted
   });
 }

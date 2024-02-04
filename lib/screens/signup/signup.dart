@@ -28,8 +28,8 @@ class _SignUpState extends State<SignUp> {
       }
       final snackBar = SnackBar(
         backgroundColor: Colors.brown,
-        content: Center(child: Text(_currUser,style: TextStyle(fontFamily: 'Cabin',fontWeight: FontWeight.bold),)),
-        duration: Duration(seconds: 4),
+        content: Center(child: Text('Internal Error Occurred',style: TextStyle(fontFamily: 'Cabin',fontWeight: FontWeight.bold),)),
+        duration: Duration(seconds: 2),
 
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -131,6 +131,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                         child: TextButton(onPressed: (){
                           if(_passwordController.text==_confirmPasswordController.text){
+                            //both the password field should match
                             _signUpUser(_emailController.text,_passwordController.text,_nameController.text,context);
                           }else{
                             final snackBar = SnackBar(
