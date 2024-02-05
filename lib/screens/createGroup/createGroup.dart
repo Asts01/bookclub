@@ -11,7 +11,7 @@ class OurCreateGroup extends StatefulWidget {
 
 class _OurCreateGroupState extends State<OurCreateGroup> {
   TextEditingController _groupNameController=new TextEditingController();
-  //function to create grp in database
+  //just take the grp name from here and proceed to addBook Screen.
   void _goToAddBook(BuildContext context,String grpName){
     Navigator.push(context, MaterialPageRoute(builder: (context)=>OurAddBook(onGrpCreation: true, groupName: grpName)));
   }

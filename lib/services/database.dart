@@ -49,13 +49,14 @@ class OurDatabase{
     List<String> _members = [];
     try{
       _members.add(uid);//add method return's reference of the user while set method don't
+      //doc_ref have the doc-id of the particular grp
       DocumentReference _docRef=await _firestore.collection('groups').add({//RETURNS REFERENCE OF GRP-ID
         'name':groupName,
         'leader':uid,
         'members':_members,
         'groupCreated':Timestamp.now(),
       });
-      //update grp id for document->user and now the user will navigate to the Home Screen
+      //update grp id for document initially when the user logged-in grp-id was null->user and now the user will navigate to the Home Screen
       await _firestore.collection('users').doc(uid).update({
         'groupId':_docRef.id,
       });
@@ -88,12 +89,14 @@ class OurDatabase{
     String retVal="success";
     //add book to the required grp can be while creating a grp initially or later modifying it
     try{
+      //will be added into the book-list of particular grp and also now this book will the current book of particular-grp
       DocumentReference _docRef=await _firestore.collection('groups').doc(grpId).collection('books').add({
         'name':book.name,
         'author':book.author,
         'length':book.length,
         'dateCompleted':book.dateCompleted,
       });
+      //_docRef contains ref to the book-id
       //1 grp will only have 1 currentBookId
       //now change the data inside groups collection
       await _firestore.collection('groups').doc(grpId).update({
@@ -146,5 +149,32 @@ class OurDatabase{
       // You might want to throw an exception or handle the error differently based on your app's requirements
     }
     return retVal;
+  }
+  //method to finish the current book and add rating and reviews
+  Future<String>finishedBook(String grpId,String bookId,String uid,int rating,String review)async{
+    String _retVal="error";
+    //we have used user-id here for setting the rating as multiple users can be part of same grp so with particular uid he is accessible to read the current book
+    try{
+      await _firestore.collection('groups').doc(grpId).collection('books').doc(bookId).collection('reviews').doc(uid).set(
+          {
+            'rating':rating,
+            'review':review,
+          });
+      _retVal="success";
+    }catch(e){print(e);}
+
+    return _retVal;
+  }
+  //check whether a book already has review property and is user id done with the book
+  //here the uid is the user-id of the users collection
+  Future<bool> isUserDonewithBook(String grpId,String bookId,String uid)async{
+    bool _retVal=false;
+    try{
+      DocumentSnapshot _docRef=await _firestore.collection('groups').doc(grpId).collection('books').doc(bookId).collection('reviews').doc(uid).get();
+      if(_docRef.exists){
+        _retVal=true;
+      }
+    }catch(e){print(e);}
+    return _retVal;
   }
 }

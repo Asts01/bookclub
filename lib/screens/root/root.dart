@@ -65,6 +65,7 @@ class _OurRootState extends State<OurRoot> {
         retVal=NoGroup();
         break;
       case AuthStatus.inGroup:
+        //home screen will have all the info abt the CurrentGroup of user
         retVal=ChangeNotifierProvider(
           create: (context)=>CurrentGroup(),
             child: HomeScreen());

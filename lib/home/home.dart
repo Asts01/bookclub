@@ -6,6 +6,8 @@ import 'package:bookclub/utils/ourTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bookclub/states/currentGroup.dart';
+import 'package:bookclub/utils/timeLeft.dart';
+import 'package:bookclub/screens/review/review.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,16 +20,33 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> _timeUntil=['loading..','loading..'];//[0]->until-current-book is due
   //[1]->time-until next book will be revealed
   late Timer _timer;
+
+  void _startTimer(CurrentGroup grp){
+    _timer=Timer.periodic(Duration(seconds: 1), (timer) {
+      //called after every 1 sec take diffrence from the current-time every one second
+      _timeUntil=OurTimeLeft().timeLeft(grp.getCurrentGroup.currentBookDue.toDate());
+      setState(() {
+
+      });
+    });
+  }
+
   @override
   void initState(){
     super.initState();
     // TODO: implement didChangeDependencies
     CurrentUser _currentUser=Provider.of<CurrentUser>(context,listen: false);
     CurrentGroup _currentGrp=Provider.of<CurrentGroup>(context,listen: false);
-    _currentGrp.updateStateFromDatabase(_currentUser.getCurrentUser.groupId!);//method to fetch current grp & book data from db
-
+    _currentGrp.updateStateFromDatabase(_currentUser.getCurrentUser.groupId!,_currentUser.getCurrentUser.uid!);//method to fetch current grp & book data from db
+    _startTimer(_currentGrp);
   }
-
+  @override
+  //disposes off everything once build method is over
+  void dispose() {
+    // TODO: implement dispose
+    _timer.cancel();//timer don't always keep on running
+    super.dispose();
+  }
   void _signOut(BuildContext context)async{
     var _currentUser=Provider.of<CurrentUser>(context,listen: false);
     String retVal=await _currentUser.onLogOut();
@@ -40,6 +59,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void _goToAddBook(BuildContext context){
     //go to add book screen taking with the required arguments
     Navigator.push(context, MaterialPageRoute(builder: (context)=>OurAddBook(onGrpCreation: false,groupName:'',)));
+  }
+
+  void _goToReview(){
+    CurrentGroup _currentGrp=Provider.of<CurrentGroup>(context,listen: false);
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>OurReview(currentGroup: _currentGrp)));
   }
 
   @override
@@ -60,18 +84,25 @@ class _HomeScreenState extends State<HomeScreen> {
               //instead of using Provider.of() many times we can use Consumer widget where the parent of CurrentGroup Provider if HomeScreen
               builder: (BuildContext context, value, Widget? child) {
                 return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Row(
                       children: [
-                        Text('Book : ',style: TextStyle(color: Colors.grey,fontSize: 26,fontWeight: FontWeight.bold,fontFamily: 'Cabin'),),
-                        Expanded(child: Text(value.getCurrentBook.name??'loading...',style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold,fontSize: 26,fontFamily: 'Cabin'),)),
+                          Expanded(child: Center(child: Text(value.getCurrentBook.name??'loading...',style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold,fontSize: 30,fontFamily: 'Cabin'),))),
+                      ],
+                    ),
+                    SizedBox(height: 10,),
+                    Row(
+                      children: [
+                        Text('Author : ',style: TextStyle(color: Colors.grey,fontSize: 26,fontWeight: FontWeight.w700,fontFamily: 'Cabin'),),
+                        Expanded(child: Text(value.getCurrentBook.author??'loading...',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 26,fontFamily: 'Cabin'),)),
                       ],
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         //to avoid render-flow use expanded widget
-                        Text('Due in : ',style: TextStyle(color: Colors.grey,fontSize: 26,fontWeight:FontWeight.w500),),
+                        Text('Due in : ',style: TextStyle(color: Colors.grey,fontSize: 26,fontWeight:FontWeight.w700),),
                         Expanded(
                           child: Text(
                             // value.getCurrentGroup.currentBookDue != null
@@ -106,6 +137,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.grey,
                       ),
                       child: TextButton(onPressed: (){
+                        value.getDoneWithCurrentBook
+                            ? ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('You are already done with this book!'),
+                            duration: Duration(seconds: 2),
+                          ),
+                        )
+                            : _goToReview();
                       }, child: Text('Finish Book',style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),)),
                     ),
                   ],
@@ -148,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             child: TextButton(onPressed: (){
               _goToAddBook(context);
-            }, child: Text('Book Club History',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),)),
+            }, child: Text('Replace Current Book',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 18),)),
           ),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 40),
