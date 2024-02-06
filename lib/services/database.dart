@@ -177,4 +177,10 @@ class OurDatabase{
     }catch(e){print(e);}
     return _retVal;
   }
+  //review-stream
+  Stream<QuerySnapshot<Map<String,dynamic>>> getReviewStream(String grpid,String bookid){
+    //streams are synchoronous that's why they are streams
+    var _stream=_firestore.collection('groups').doc(grpid).collection('books').doc(bookid).collection('reviews').snapshots();
+    return _stream;
+  }
 }

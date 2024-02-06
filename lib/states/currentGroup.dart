@@ -12,7 +12,9 @@ class CurrentGroup extends ChangeNotifier{
   OurGroup get getCurrentGroup=>_currentGroup;
   OurBook get getCurrentBook=>_currentBook;
   bool get getDoneWithCurrentBook=>_doneWithCurrentBook;
-
+  void notifyListeners(){
+    notifyListeners();
+  }
   void updateStateFromDatabase(String groupId,String uid)async{
     try{
       //get the current grp-info from firebase

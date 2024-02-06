@@ -3,7 +3,7 @@ import 'package:bookclub/states/currentUser.dart';
 import 'package:bookclub/utils/ourTheme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+//add review page according to rating and review-msg
 class OurReview extends StatefulWidget {
   final CurrentGroup currentGroup;
   OurReview({required this.currentGroup});
@@ -24,8 +24,13 @@ class _OurReviewState extends State<OurReview> {
           SizedBox(height: 15,),
           Padding(padding: EdgeInsets.all(20),child: Row(
             children: <Widget>[
-              BackButton(
-                onPressed: (){Navigator.pop(context);},
+              ElevatedButton(
+                child:Container(
+                  child: Icon(Icons.arrow_back_ios),
+                ),
+                onPressed: (){
+                  Navigator.pop(context);
+                },
               ),
             ],
           ),),

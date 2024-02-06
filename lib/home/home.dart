@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:bookclub/states/currentGroup.dart';
 import 'package:bookclub/utils/timeLeft.dart';
 import 'package:bookclub/screens/review/review.dart';
+import 'package:bookclub/screens/review/othersReview.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -65,7 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
     CurrentGroup _currentGrp=Provider.of<CurrentGroup>(context,listen: false);
     Navigator.push(context, MaterialPageRoute(builder: (context)=>OurReview(currentGroup: _currentGrp)));
   }
-
+  void _goToOthersReview(){
+    CurrentGroup _currentGrp=Provider.of<CurrentGroup>(context,listen: false);
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>OthersReview(grpid: _currentGrp.getCurrentGroup.id!,bookid: _currentGrp.getCurrentBook.id,)));
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,13 +141,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.grey,
                       ),
                       child: TextButton(onPressed: (){
+                        // _currentGrp.notifyListeners();
                         value.getDoneWithCurrentBook
-                            ? ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('You are already done with this book!'),
-                            duration: Duration(seconds: 2),
-                          ),
-                        )
+                            ? _goToOthersReview()
                             : _goToReview();
                       }, child: Text('Finish Book',style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),)),
                     ),
