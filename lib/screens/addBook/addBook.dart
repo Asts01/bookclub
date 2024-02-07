@@ -3,7 +3,6 @@ import 'package:bookclub/screens/root/root.dart';
 import 'package:bookclub/services/database.dart';
 import 'package:bookclub/states/currentUser.dart';
 import 'package:bookclub/utils/ourTheme.dart';
-import 'package:cloud_firestore_platform_interface/src/timestamp.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
@@ -59,7 +58,7 @@ class _OurAddBookState extends State<OurAddBook> {
       backgroundColor: ourTheme().lightGreen,
       body: ListView(
         children: [
-          SizedBox(height: 15,),
+          // SizedBox(height: 15,),
           Padding(padding: EdgeInsets.all(20),child: Row(
             children: <Widget>[
               BackButton(

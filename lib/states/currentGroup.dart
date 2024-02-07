@@ -3,6 +3,7 @@ import 'package:bookclub/models/book.dart';
 import 'package:bookclub/models/group.dart';
 import 'package:bookclub/services/database.dart';
 import 'package:flutter/cupertino.dart';
+
 //extends changeNotifier bcoz it has to act as provider for lower-widgets
 class CurrentGroup extends ChangeNotifier{
   OurGroup _currentGroup=OurGroup();
@@ -26,9 +27,10 @@ class CurrentGroup extends ChangeNotifier{
     }catch(e){print(e);}
   }
   //event to be triggered when the user presses finish-book
-  void finishedBook(String uid,int rating,String review)async{
+  void finishedBook(String uid,int rating,String review,String username)async{
     try{
-      await OurDatabase().finishedBook(_currentGroup.id!, _currentGroup.currentBookId!,uid, rating, review);
+
+      await OurDatabase().finishedBook(_currentGroup.id!, _currentGroup.currentBookId!,uid, rating, review,username);
       _doneWithCurrentBook=true;
       notifyListeners();//update the local-state
     }catch(e){print(e);}

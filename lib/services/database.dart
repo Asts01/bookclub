@@ -2,6 +2,7 @@ import 'package:bookclub/models/users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bookclub/models/group.dart';
 import 'package:bookclub/models/book.dart';
+//replace current book not showing review of current book and showing review o
 class OurDatabase{
   final FirebaseFirestore _firestore=FirebaseFirestore.instance;//new instnce of cloud firestore
   //saves data to the cloud-firestore
@@ -151,14 +152,19 @@ class OurDatabase{
     return retVal;
   }
   //method to finish the current book and add rating and reviews
-  Future<String>finishedBook(String grpId,String bookId,String uid,int rating,String review)async{
+  Future<String>finishedBook(String grpId,String bookId,String uid,int rating,String review,String username)async{
     String _retVal="error";
     //we have used user-id here for setting the rating as multiple users can be part of same grp so with particular uid he is accessible to read the current book
     try{
+      DateTime now = DateTime.now();
+      String formattedDate = "${now.day.toString().padLeft(2, '0')}/${now.month.toString().padLeft(2, '0')}/${now.year.toString()}";
+
       await _firestore.collection('groups').doc(grpId).collection('books').doc(bookId).collection('reviews').doc(uid).set(
           {
             'rating':rating,
             'review':review,
+            'user':username,
+            'date':formattedDate,
           });
       _retVal="success";
     }catch(e){print(e);}

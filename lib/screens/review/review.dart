@@ -21,16 +21,24 @@ class _OurReviewState extends State<OurReview> {
       backgroundColor: ourTheme().lightGreen,
       body: Column(
         children: [
-          SizedBox(height: 15,),
+          // SizedBox(height: 15,),
           Padding(padding: EdgeInsets.all(20),child: Row(
             children: <Widget>[
-              ElevatedButton(
-                child:Container(
-                  child: Icon(Icons.arrow_back_ios),
-                ),
-                onPressed: (){
+              SizedBox(height: 100,),
+              GestureDetector(
+                onTap: (){
                   Navigator.pop(context);
                 },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Icon(Icons.arrow_back_ios),
+                  ),
+                ),
               ),
             ],
           ),),
@@ -114,7 +122,8 @@ class _OurReviewState extends State<OurReview> {
                           ),
                           onPressed: (){
                             String uid=Provider.of<CurrentUser>(context,listen: false).getCurrentUser.uid!;
-                            widget.currentGroup.finishedBook(uid, _dropDownValue,_reviewContoller.text);
+                            String username=Provider.of<CurrentUser>(context,listen: false).getCurrentUser.fullName!;
+                            widget.currentGroup.finishedBook(uid, _dropDownValue,_reviewContoller.text,username);
                             Navigator.pop(context);
                           }, child: Text('Add Book',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),)),
                       SizedBox(height: 20,),

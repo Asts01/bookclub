@@ -37,15 +37,26 @@ class _OthersReviewState extends State<OthersReview> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                // SizedBox(height: 10,),
                 GestureDetector(
                   onTap: (){
                     Navigator.pop(context);
                   },
-                  child: Container(
-                    child: Icon(Icons.arrow_back_ios),
+                  child: Row(
+                    children: [Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Icon(Icons.arrow_back_ios,color: Colors.black,),
+                      ),
+                    ),
+                    SizedBox(width: 10,),
+                    Text('Ratings',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontFamily: 'Cabin',fontSize: 20),)],
                   ),
                 ),
-                SizedBox(height: 500,),
                 StreamBuilder<QuerySnapshot>(
                   stream: _stream,
                   builder: (context, snapshot) {
@@ -60,17 +71,18 @@ class _OthersReviewState extends State<OthersReview> {
                       return Center(child:Text('No reviews available'));
                     } else {
                       final messages = snapshot.data!.docs;
-                      List<List<dynamic>>ratings=[];
+                      List<ReviewBubble>ratings=[];
                       for(var msg in messages){
                         final dynamic rating = msg['rating'];
                         final dynamic review = msg['review'];
-                        List<dynamic>items=[];
-                        items.add(rating);items.add(review);
-                        ratings.add(items);
+                        final dynamic user=msg['user'];
+                        final dynamic time=msg['date'];
+                        ReviewBubble _bubble=ReviewBubble(rating: rating,review: review,user:user,time:time);
+                        ratings.add(_bubble);
                       }
-                      return Container(
-                        child: Text(ratings[0][0].toString()),
-                      );
+                      return Expanded(child: ListView(
+                        children: ratings,
+                      ));
                     }
                   },
                 ),
@@ -80,27 +92,61 @@ class _OthersReviewState extends State<OthersReview> {
       );
     }
   }
-// class ReviewBubble extends StatelessWidget {
-//   final String rating;
-//   final String review;
-//   ReviewBubble({this.rating,this.rev})
-//   const ReviewBubble({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//       ),
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         children: [
-//           Text(ratings[0][0].toString()),
-//           SizedBox(height: 10,),
-//           Text(ratings[0][1]),
-//         ],
-//       ),
-//     );
-//   }
-// }
+class ReviewBubble extends StatelessWidget {
+  final dynamic rating;
+  final String review;
+  final dynamic user;
+  final dynamic time;
+  ReviewBubble({required this.rating,required this.review,required this.user,required this.time});
+
+  @override
+  Widget build(BuildContext context) {
+    String stars="";
+    for(int i=0;i<rating;i++){
+      stars+='⭐';
+    }
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 7,vertical: 6),
+      margin: EdgeInsets.symmetric(horizontal: 10,vertical: 7),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text('User : ',style: TextStyle(fontWeight: FontWeight.w700),),
+              Text(user),
+            ],
+          ),
+          SizedBox(height: 6,),
+          Row(
+            children: [
+              Text('Rated : ',style: TextStyle(fontWeight: FontWeight.w700),),
+              Text(stars),
+            ],
+          ),
+          SizedBox(height: 6,),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Review : ',style: TextStyle(fontWeight: FontWeight.w700),),
+              Flexible(child: Text(review)),
+            ],
+          ),
+          SizedBox(height: 6,),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Added on : ',style: TextStyle(fontWeight: FontWeight.w700),),
+              Flexible(child: Text(time.toString())),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
 
