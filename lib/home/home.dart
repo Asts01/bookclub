@@ -10,6 +10,7 @@ import 'package:bookclub/states/currentGroup.dart';
 import 'package:bookclub/utils/timeLeft.dart';
 import 'package:bookclub/screens/review/review.dart';
 import 'package:bookclub/screens/review/othersReview.dart';
+import 'package:bookclub/screens/chatting/chat.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -74,19 +75,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.chat,color: Colors.white,),
+        shape: CircleBorder(),
+        backgroundColor: Color(0xFF679289),
+        onPressed: (){
+          CurrentGroup _currentGrp=Provider.of<CurrentGroup>(context,listen: false);
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatScreen(grpId: _currentGrp.getCurrentGroup.id!)));
+        },
+      ),
       backgroundColor: ourTheme().lightGreen,
       body: ListView(
         children: [
           SizedBox(height: 20,),
           //just for demo will remove it afterwards
-          GestureDetector(
-              onTap: (){
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OurAllGroups()), (route) => false);
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 40),
-                child: Text('Back to all grps screen',style: TextStyle(color: Colors.blueAccent,decoration: TextDecoration.underline),),)),
-          SizedBox(height: 7,),
           Container(
             padding: EdgeInsets.all(30),
             margin: const EdgeInsets.symmetric(horizontal: 30),
@@ -217,6 +219,16 @@ class _HomeScreenState extends State<HomeScreen> {
             child: TextButton(onPressed: (){
               _signOut(context);
             }, child: Text('Sign-Out',style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),)),
+          ),
+          SizedBox(height: 10,),
+          Center(
+            child: GestureDetector(
+                onTap: (){
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OurAllGroups()), (route) => false);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: Text('Back to all grps screen',style: TextStyle(color: Colors.blueAccent,decoration: TextDecoration.underline),),)),
           ),
         ],
       ),

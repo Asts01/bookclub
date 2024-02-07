@@ -35,7 +35,17 @@ class _OurAllGroupsState extends State<OurAllGroups> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(margin:EdgeInsets.symmetric(horizontal: 15),child: Text('Select a group to join',style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w600,fontSize:18,fontFamily: 'Cabin'),)),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Image.asset('assets/teamwork.png',width: 40,height: 40,),
+                  Container(margin:EdgeInsets.symmetric(horizontal: 3),child: Text('Select a group to join',style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w600,fontSize:18,fontFamily: 'Cabin',decoration: TextDecoration.underline,textBaseline: TextBaseline.alphabetic),)),
+                ],
+              ),
+            ),
+            SizedBox(height: 7,),
             StreamBuilder(stream: _stream, builder: (context,snapshot){
               if (snapshot.connectionState == ConnectionState.waiting) {
                 // Show a loading indicator while waiting for data
@@ -94,6 +104,27 @@ class GrpBubble extends StatefulWidget {
 }
 
 class _GrpBubbleState extends State<GrpBubble> {
+  late String leaderName;
+  late String currentBookName;
+  List<dynamic> membersName=[];
+  bool _loading=true;
+  @override
+  void callNamesFromIds()async{
+    leaderName=await OurDatabase().getUserName(widget.grpLeader);
+    currentBookName=await OurDatabase().getBookName(widget.grpId, widget.currentBook);
+    for(int i=0;i<widget.members.length;i++){
+      String name=await await OurDatabase().getUserName(widget.members[i]);
+      membersName.add(name);
+    }
+    setState(() {
+      _loading=false;
+    });
+  }
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    callNamesFromIds();
+  }
   void _joinGrp(BuildContext context,String grpId) async{
     CurrentUser _currentUser=Provider.of<CurrentUser>(context,listen: false);//currentUser hold the reference of current user present in the app
     String _returnString=await OurDatabase().JoinGrp(grpId, _currentUser.getCurrentUser.uid);
@@ -104,7 +135,7 @@ class _GrpBubbleState extends State<GrpBubble> {
   }
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return _loading?Center(child: CircularProgressIndicator(),):GestureDetector(
       onTap: (){
         _joinGrp(context, widget.grpId);
       },
@@ -142,17 +173,7 @@ class _GrpBubbleState extends State<GrpBubble> {
                   'Group Leader: ',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Flexible(child: Text(widget.grpLeader)),
-              ],
-            ),
-            SizedBox(height: 6),
-            Row(
-              children: [
-                Text(
-                  'Group ID: ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Flexible(child: Text(widget.grpId)),
+                Flexible(child: Text(leaderName)),
               ],
             ),
             SizedBox(height: 6),
@@ -162,7 +183,7 @@ class _GrpBubbleState extends State<GrpBubble> {
                   'Current Book: ',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Flexible(child: Text(widget.currentBook)),
+                Flexible(child: Text(currentBookName)),
               ],
             ),
             SizedBox(height: 6),
@@ -174,7 +195,7 @@ class _GrpBubbleState extends State<GrpBubble> {
                 ),
                 Flexible(
                   child: Text(
-                    widget.members.join(", "),
+                    membersName.join(", "),
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                   ),

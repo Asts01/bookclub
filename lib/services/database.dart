@@ -203,7 +203,7 @@ class OurDatabase{
       if (_docref.exists) {
         // Check if the document exists
         Map<String, dynamic> data = _docref.data() as Map<String, dynamic>;
-        retVal= data['fullName'] ?? '';
+        retVal= data['fullName'] ?? '';//name of the user
       }
     }catch(e){
       print('Error fetching user-name from uid');
@@ -224,5 +224,11 @@ class OurDatabase{
       print('Error fetching book-name from book-id');
     }
     return retVal;
+  }
+  Stream<QuerySnapshot<Map<String,dynamic>>> getMessageStream(String grpId){
+    //streams are synchoronous that's why they are streams
+    //JISKA TIME SBSE JYADA H VO PEHLE AAYEGA->descending:true
+    var _stream=_firestore.collection('groups').doc(grpId).collection('messages').orderBy('time',descending: true).snapshots();
+    return _stream;
   }
 }
