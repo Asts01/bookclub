@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bookclub/screens/addBook/addBook.dart';
+import 'package:bookclub/screens/joinGroup/allGroups.dart';
 import 'package:bookclub/screens/root/root.dart';
 import 'package:bookclub/states/currentUser.dart';
 import 'package:bookclub/utils/ourTheme.dart';
@@ -77,6 +78,15 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView(
         children: [
           SizedBox(height: 20,),
+          //just for demo will remove it afterwards
+          GestureDetector(
+              onTap: (){
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OurAllGroups()), (route) => false);
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 40),
+                child: Text('Back to all grps screen',style: TextStyle(color: Colors.blueAccent,decoration: TextDecoration.underline),),)),
+          SizedBox(height: 7,),
           Container(
             padding: EdgeInsets.all(30),
             margin: const EdgeInsets.symmetric(horizontal: 30),

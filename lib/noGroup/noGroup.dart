@@ -1,4 +1,5 @@
 import 'package:bookclub/screens/createGroup/createGroup.dart';
+import 'package:bookclub/screens/joinGroup/allGroups.dart';
 import 'package:bookclub/screens/joinGroup/joinGroup.dart';
 import 'package:flutter/material.dart';
 import 'package:bookclub/utils/ourTheme.dart';
@@ -9,7 +10,7 @@ import 'package:bookclub/states/currentUser.dart';
 class NoGroup extends StatelessWidget {
   const NoGroup({super.key});
   void _goToJoin(BuildContext context){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>JoinGroup()));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>OurAllGroups()));
   }
   void _goToCreate(BuildContext context){
     Navigator.push(context, MaterialPageRoute(builder: (context)=>OurCreateGroup()));

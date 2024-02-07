@@ -189,4 +189,40 @@ class OurDatabase{
     var _stream=_firestore.collection('groups').doc(grpid).collection('books').doc(bookid).collection('reviews').snapshots();
     return _stream;
   }
+  //get stream of all the grp-id's
+  Stream<QuerySnapshot<Map<String,dynamic>>> getGroupStream(){
+    //streams are synchoronous that's why they are streams
+    var _stream=_firestore.collection('groups').snapshots();
+    return _stream;
+  }
+  //get book-name and user-name from document id's
+  Future<String> getUserName(String uid)async{
+    String retVal="success";
+    try{
+      DocumentSnapshot _docref=await _firestore.collection('users').doc(uid).get();
+      if (_docref.exists) {
+        // Check if the document exists
+        Map<String, dynamic> data = _docref.data() as Map<String, dynamic>;
+        retVal= data['fullName'] ?? '';
+      }
+    }catch(e){
+      print('Error fetching user-name from uid');
+    }
+
+    return retVal;
+  }
+  Future<String> getBookName(String grpid,String bookid)async{
+    String retVal="success";
+    try{
+      DocumentSnapshot _docref=await _firestore.collection('groups').doc(grpid).collection('books').doc(bookid).get();
+      if (_docref.exists) {
+        // Check if the document exists
+        Map<String, dynamic> data = _docref.data() as Map<String, dynamic>;
+        retVal= data['name'] ?? '';//name of current-book
+      }
+    }catch(e){
+      print('Error fetching book-name from book-id');
+    }
+    return retVal;
+  }
 }
