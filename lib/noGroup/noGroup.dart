@@ -35,12 +35,12 @@ class NoGroup extends StatelessWidget {
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: 40,),
-              TextButton(onPressed: ()=>_signOut(context), child: Text('Sign-out')),
+              TextButton(onPressed: ()=>_signOut(context), child: Text('Sign-out',style: TextStyle(decoration: TextDecoration.underline,fontWeight: FontWeight.bold,fontSize: 20),)),
               SizedBox(height: 70,),
               Center(child: Image.asset('assets/book.png',width: 300,height: 250,)),
               SizedBox(height: 10,),
               Text('Welcome to\n Convene',style: TextStyle(
-                color: Colors.grey,
+                color: Colors.brown,
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Cabin',
@@ -70,13 +70,13 @@ class NoGroup extends StatelessWidget {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
+                            color: Colors.brown.withOpacity(0.5),
                             spreadRadius: 5,
                             blurRadius: 7,
                             offset: Offset(0, 3), // changes position of shadow
                           ),
                         ],
-                        color: Colors.grey,
+                        color: Colors.brown,
                         border: Border.all(width: 1),
                         borderRadius: BorderRadius.circular(30),
                       ),

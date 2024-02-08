@@ -231,4 +231,11 @@ class OurDatabase{
     var _stream=_firestore.collection('groups').doc(grpId).collection('messages').orderBy('time',descending: true).snapshots();
     return _stream;
   }
+  // getAllBookStream(widget.grpid)
+  Stream<QuerySnapshot<Map<String,dynamic>>> getAllbookStream(String grpid){
+    //streams are synchoronous that's why they are streams
+    //JISKA TIME SBSE JYADA H VO PEHLE AAYEGA->descending:true
+    var _stream=_firestore.collection('groups').doc(grpid).collection('books').snapshots();
+    return _stream;
+  }
 }

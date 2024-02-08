@@ -13,7 +13,7 @@ class OurSplashScreen extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
-              SizedBox(height: 200,),
+              SizedBox(height: 400,),
               Text('loading...',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
               TextButton(onPressed: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>OurLoginScreen()));

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:bookclub/utils/ourTheme.dart';
 import 'package:provider/provider.dart';
 import 'package:bookclub/states/currentUser.dart';
+import 'package:intl/intl.dart';//for conversions of date-time into required formats
 
 class ChatScreen extends StatefulWidget {
   String grpId;
@@ -47,7 +48,17 @@ class _ChatScreenState extends State<ChatScreen> {
                 //cant use pop-context bcox u came from push and removed until
                 Navigator.pop(context);
               },
-              child: Container(decoration:BoxDecoration(color: Color(0xFFFFFACA),borderRadius: BorderRadius.circular(30)),child: Padding(
+              child: Container(decoration:BoxDecoration(color: Color(0xFFFFFACA),
+                  borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.yellow.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+                    offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),child: Padding(
                   padding: EdgeInsets.all(3),
                   child: Icon(Icons.home,color: Colors.green,size: 20,)),),
             ),
@@ -80,9 +91,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   for(var msg in messages){
                     final dynamic _msg = msg['message'];
                     final dynamic _sender= msg['user'];
+                    final dynamic _timeFromDB=msg['time'];
+                    final dynamic ddmmyyyy= DateFormat.Hm().format(_timeFromDB.toDate());
+                    final dynamic date=DateFormat('dd/MM/yyyy').format(_timeFromDB.toDate());
+                    // Output will be in hour:minute format (e.g., 12:34)
                     bool _isMe=false;
                     if(_sender==_currentUserName)_isMe=true;
-                    MessageBubble _bubble=MessageBubble(msg: _msg,sender: _sender,isMe: _isMe,);
+                    MessageBubble _bubble=MessageBubble(msg: _msg,sender: _sender,isMe: _isMe,date: date,ddmmyy: ddmmyyyy,);
                     allMessages.add(_bubble);
                   }
                   return Expanded(
@@ -120,7 +135,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       _firestore.collection('groups').doc(widget.grpId).collection('messages').add({
                         'message':messageController.text,
                         'user':_currentUserName,
-                        'time':DateTime.now(),
+                        'time':Timestamp.now(),
                       });
                       messageController.clear();
                     },
@@ -139,47 +154,64 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 class MessageBubble extends StatelessWidget {
-  MessageBubble({this.msg, this.sender, this.isMe});
+  final dynamic ddmmyy;
+  final dynamic date;
   final dynamic msg;
   final dynamic sender;
   final dynamic isMe;
+  MessageBubble({this.ddmmyy,this.date,this.msg, this.sender, this.isMe});
   @override
   Widget build(BuildContext context) {
     //Material is customizable-widget
     ////We need to add padding around each MsgBubble
     return Padding(
       padding: EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment:
-        isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: <Widget>[
-          Text('$sender'),
-          Material(
-            elevation: 5.0,
-            borderRadius: isMe
-                ? BorderRadius.only(
-              topLeft: Radius.circular(20),
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
-            )
-                : BorderRadius.only(
-              topRight: Radius.circular(20),
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
-            ),
-            color: isMe ? Color(0xFF679289) : Colors.brown,
-            child: Padding(
-              padding: EdgeInsets.all(5),
-              child: Text(
-                '$msg',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
+      child: Expanded(
+        child: Column(
+          crossAxisAlignment:
+          isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: <Widget>[
+            Text('$sender'),
+            Material(
+              elevation: 5.0,
+              borderRadius: isMe
+                  ? BorderRadius.only(
+                topLeft: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              )
+                  : BorderRadius.only(
+                topRight: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+              color: isMe ? Color(0xFF679289) : Colors.brown,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      '$msg',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(ddmmyy.toString(),style: TextStyle(color: Colors.white,fontSize: 10),),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10,vertical: 2),
+                    child: Text(date.toString(),style: TextStyle(color: Colors.white,fontSize: 8),),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

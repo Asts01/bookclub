@@ -51,7 +51,7 @@ class _SignUpState extends State<SignUp> {
             GestureDetector(
               onTap: (){Navigator.pop(context);},
               child: Container(
-                decoration: BoxDecoration(color: Colors.grey,borderRadius: BorderRadius.circular(40)),
+                decoration: BoxDecoration(color: Colors.brown,borderRadius: BorderRadius.circular(40)),
                 padding: EdgeInsets.all(2),
                 child: Icon(Icons.arrow_back_ios,color: Colors.white,weight: 15.0,),
               ),
@@ -126,7 +126,7 @@ class _SignUpState extends State<SignUp> {
                     SizedBox(height: 40,),
                     Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey,
+                          color: Colors.brown,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: TextButton(onPressed: (){
@@ -142,7 +142,7 @@ class _SignUpState extends State<SignUp> {
                             );
                             ScaffoldMessenger.of(context).showSnackBar(snackBar);
                           }
-                        }, child: Text('Login',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 30,fontFamily: 'Cabin'),))),
+                        }, child: Text('Sign-In',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 30,fontFamily: 'Cabin'),))),
                     SizedBox(height: 10,),
                   ],
                 ),

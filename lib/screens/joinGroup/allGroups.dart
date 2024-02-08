@@ -27,8 +27,8 @@ class _OurAllGroupsState extends State<OurAllGroups> {
       backgroundColor: ourTheme().lightGreen,
       appBar: AppBar(
         elevation: 5,
-        backgroundColor: Colors.transparent,
-        title: Text('Existing Groups',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.brown,
+        title: Text('Existing Groups',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
       ),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
@@ -40,8 +40,22 @@ class _OurAllGroupsState extends State<OurAllGroups> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Image.asset('assets/teamwork.png',width: 40,height: 40,),
-                  Container(margin:EdgeInsets.symmetric(horizontal: 3),child: Text('Select a group to join',style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w600,fontSize:18,fontFamily: 'Cabin',decoration: TextDecoration.underline,textBaseline: TextBaseline.alphabetic),)),
+                  Container(
+                      child: Image.asset('assets/teamwork.png',width: 40,height: 40,),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.brown.withOpacity(0.5), // Shadow color
+                          spreadRadius: 5, // Spread radius
+                          blurRadius: 7, // Blur radius
+                          offset: Offset(0, 3), // Offset to control the position of the shadow
+                        ),
+                      ],
+
+                    ),
+                  ),
+                  Container(margin:EdgeInsets.symmetric(horizontal: 3),child: Text('Select a group to join',style: TextStyle(color: Colors.brown,fontWeight: FontWeight.w600,fontSize:18,fontFamily: 'Cabin',decoration: TextDecoration.underline,textBaseline: TextBaseline.alphabetic),)),
                 ],
               ),
             ),
@@ -161,7 +175,7 @@ class _GrpBubbleState extends State<GrpBubble> {
               children: [
                 Text(
                   'Group Name: ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(color:Colors.brown,fontWeight: FontWeight.bold),
                 ),
                 Flexible(child: Text(widget.grpName)),
               ],
@@ -171,7 +185,7 @@ class _GrpBubbleState extends State<GrpBubble> {
               children: [
                 Text(
                   'Group Leader: ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(color:Colors.brown,fontWeight: FontWeight.bold),
                 ),
                 Flexible(child: Text(leaderName)),
               ],
@@ -181,7 +195,7 @@ class _GrpBubbleState extends State<GrpBubble> {
               children: [
                 Text(
                   'Current Book: ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(color:Colors.brown,fontWeight: FontWeight.bold),
                 ),
                 Flexible(child: Text(currentBookName)),
               ],
@@ -191,7 +205,7 @@ class _GrpBubbleState extends State<GrpBubble> {
               children: [
                 Text(
                   'Members: ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(color:Colors.brown,fontWeight: FontWeight.bold),
                 ),
                 Flexible(
                   child: Text(

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bookclub/screens/addBook/addBook.dart';
+import 'package:bookclub/screens/allBooksOfGrp/allBooksOfGrp.dart';
 import 'package:bookclub/screens/joinGroup/allGroups.dart';
 import 'package:bookclub/screens/root/root.dart';
 import 'package:bookclub/states/currentUser.dart';
@@ -11,7 +12,7 @@ import 'package:bookclub/utils/timeLeft.dart';
 import 'package:bookclub/screens/review/review.dart';
 import 'package:bookclub/screens/review/othersReview.dart';
 import 'package:bookclub/screens/chatting/chat.dart';
-
+//CurrentGroup has scope only in this file unlike from CurrentUser having scope in entire main-file
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -75,8 +76,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFF679289),
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(Icons.home,color: Colors.brown,size: 40,),
+            Text('Home',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 12),),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.chat,color: Colors.white,),
+        child: Icon(Icons.chat,color: Colors.brown,size: 40,),
         shape: CircleBorder(),
         backgroundColor: Color(0xFF679289),
         onPressed: (){
@@ -102,15 +113,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Text('Current Book Allocated',style: TextStyle(color: Color(0xFF679289),fontSize: 18,fontWeight: FontWeight.bold,fontFamily: 'Cabin',decoration: TextDecoration.underline),),
                     Row(
                       children: [
-                          Expanded(child: Center(child: Text(value.getCurrentBook.name??'loading...',style: TextStyle(color: Colors.grey,fontWeight: FontWeight.bold,fontSize: 30,fontFamily: 'Cabin'),))),
+                          Expanded(child: Center(child: Text(value.getCurrentBook.name??'loading...',style: TextStyle(color: Colors.brown,fontWeight: FontWeight.bold,fontSize: 30,fontFamily: 'Cabin'),))),
                       ],
                     ),
                     SizedBox(height: 10,),
                     Row(
                       children: [
-                        Text('Author : ',style: TextStyle(color: Colors.grey,fontSize: 26,fontWeight: FontWeight.w700,fontFamily: 'Cabin'),),
+                        Text('Author : ',style: TextStyle(color: Colors.brown,fontSize: 26,fontWeight: FontWeight.w700,fontFamily: 'Cabin'),),
                         Expanded(child: Text(value.getCurrentBook.author??'loading...',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 26,fontFamily: 'Cabin'),)),
                       ],
                     ),
@@ -118,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         //to avoid render-flow use expanded widget
-                        Text('Due in : ',style: TextStyle(color: Colors.grey,fontSize: 26,fontWeight:FontWeight.w700),),
+                        Text('Due in : ',style: TextStyle(color: Colors.brown,fontSize: 26,fontWeight:FontWeight.w700),),
                         Expanded(
                           child: Text(
                             // value.getCurrentGroup.currentBookDue != null
@@ -143,14 +155,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
+                            color: Colors.brown.withOpacity(0.5),
                             spreadRadius: 5,
                             blurRadius: 7,
                             offset: Offset(0, 3), // changes position of shadow
                           ),
                         ],
                         borderRadius: BorderRadius.circular(15),
-                        color: Colors.grey,
+                        color: Colors.brown,
                       ),
                       child: TextButton(onPressed: (){
                         // _currentGrp.notifyListeners();
@@ -166,36 +178,36 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           SizedBox(height: 15,),
-
-          SizedBox(height: 20,),
-          Container(
-            padding: EdgeInsets.all(17),
-            margin: EdgeInsets.symmetric(horizontal: 30),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Row(
-              children: [
-                Text('Next book \nrevealed in : ',style: TextStyle(color: Colors.grey,fontSize: 26,fontWeight: FontWeight.bold),),
-                Text(_timeUntil[1],style: TextStyle(color: Colors.black,fontSize: 24,fontWeight: FontWeight.w700),),
-              ],
-            )
-          ),
+//Add books for future studies->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+          // SizedBox(height: 20,),
+          // Container(
+          //   padding: EdgeInsets.all(17),
+          //   margin: EdgeInsets.symmetric(horizontal: 30),
+          //   decoration: BoxDecoration(
+          //     color: Colors.white,
+          //     borderRadius: BorderRadius.circular(15),
+          //   ),
+          //   child: Row(
+          //     children: [
+          //       Text('Next book \nrevealed in : ',style: TextStyle(color: Colors.brown,fontSize: 26,fontWeight: FontWeight.bold),),
+          //       Text(_timeUntil[1],style: TextStyle(color: Colors.black,fontSize: 24,fontWeight: FontWeight.w700),),
+          //     ],
+          //   )
+          // ),
           Container(
             margin: EdgeInsets.all(40),
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
+                  color: Colors.brown.withOpacity(0.5),
                   spreadRadius: 5,
                   blurRadius: 7,
                   offset: Offset(0, 3), // changes position of shadow
                 ),
               ],
               borderRadius: BorderRadius.circular(30),
-              color: Colors.grey,
+              color: Colors.brown,
             ),
             child: TextButton(onPressed: (){
               _goToAddBook(context);
@@ -207,20 +219,20 @@ class _HomeScreenState extends State<HomeScreen> {
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
+                  color: Colors.brown.withOpacity(0.5),
                   spreadRadius: 5,
                   blurRadius: 7,
                   offset: Offset(0, 3), // changes position of shadow
                 ),
               ],
               borderRadius: BorderRadius.circular(30),
-              color: Colors.grey,
+              color: Colors.brown,
             ),
             child: TextButton(onPressed: (){
               _signOut(context);
             }, child: Text('Sign-Out',style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),)),
           ),
-          SizedBox(height: 10,),
+          SizedBox(height: 20,),
           Center(
             child: GestureDetector(
                 onTap: (){
@@ -228,8 +240,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 40),
-                  child: Text('Back to all grps screen',style: TextStyle(color: Colors.blueAccent,decoration: TextDecoration.underline),),)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.groups,color: Color(0xFF679289),),
+                      SizedBox(width: 15,),
+                      Text('Back to Groups ',style: TextStyle(color: Color(0xFF679289),fontWeight:FontWeight.bold,decoration: TextDecoration.underline,fontSize: 18),),
+                    ],
+                  ),)),
           ),
+          SizedBox(height: 10,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.history,color: Colors.brown,size: 30,),
+              TextButton(onPressed: (){
+                CurrentGroup _currentGrp=Provider.of<CurrentGroup>(context,listen: false);
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooksOfGroup(grpid: _currentGrp.getCurrentGroup.id!, bookid: _currentGrp.getCurrentBook.id!)));
+              }, child: Text('View Previously Read Books',style: TextStyle(color: Colors.brown,fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'Cabin',decoration: TextDecoration.underline),)),
+            ],
+          ),
+          SizedBox(height: 80,),
         ],
       ),
     );

@@ -61,7 +61,7 @@ class _OurCreateGroupState extends State<OurCreateGroup> {
                       ),
                       ElevatedButton(
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.grey), // Change this color to your desired color
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.brown), // Change this color to your desired color
                         ),
                           onPressed: (){
                           _goToAddBook(context, _groupNameController.text);
