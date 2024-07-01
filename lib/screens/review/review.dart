@@ -112,7 +112,7 @@ class _OurReviewState extends State<OurReview> {
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             prefixIcon:Icon(Icons.group),
-                            hintText: 'Add a Review',
+                            hintText: 'Add a Review based on your experience',
                           ),
                         ),
                       ),
@@ -123,9 +123,9 @@ class _OurReviewState extends State<OurReview> {
                           onPressed: (){
                             String uid=Provider.of<CurrentUser>(context,listen: false).getCurrentUser.uid!;
                             String username=Provider.of<CurrentUser>(context,listen: false).getCurrentUser.fullName!;
-                            widget.currentGroup.finishedBook(uid, _dropDownValue,_reviewContoller.text,username);
+                            widget.currentGroup.finishedBook(uid, _dropDownValue,_reviewContoller.text,username);//now donewithCurrentBook will be set true for user in GroupData file
                             Navigator.pop(context);
-                          }, child: Text('Add Book',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),)),
+                          }, child: Text('Add Review',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),)),
                       SizedBox(height: 20,),
                     ],
                   ),

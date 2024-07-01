@@ -24,12 +24,18 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> _timeUntil=['loading..','loading..'];//[0]->until-current-book is due
   //[1]->time-until next book will be revealed
   late Timer _timer;
+  bool _doneOnce=false;
+  bool currentBookPending=true;
+
 
   void _startTimer(CurrentGroup grp){
     _timer=Timer.periodic(Duration(seconds: 1), (timer) {
       //called after every 1 sec take diffrence from the current-time every one second
       _timeUntil=OurTimeLeft().timeLeft(grp.getCurrentGroup.currentBookDue.toDate());
       setState(() {
+        if (_timeUntil[0] == "REPLACE CURRENT BOOK from below ↓↓↓↓"&&_doneOnce==false) {
+          _showReplaceBookAlert();
+        }
 
       });
     });
@@ -39,6 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState(){
     super.initState();
     // TODO: implement didChangeDependencies
+    //currentGroup and currentUser are the active-user & the active-group the user belongs to and these have state (active-living-entities) of the ap
+    //as the active user and the user's group keep on changing
+    //thets why each time home screen is rebuild as due to updateState method current-group changes which causes the consumer widget to re-built
     CurrentUser _currentUser=Provider.of<CurrentUser>(context,listen: false);
     CurrentGroup _currentGrp=Provider.of<CurrentGroup>(context,listen: false);
     _currentGrp.updateStateFromDatabase(_currentUser.getCurrentUser.groupId!,_currentUser.getCurrentUser.uid!);//method to fetch current grp & book data from db
@@ -55,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var _currentUser=Provider.of<CurrentUser>(context,listen: false);
     String retVal=await _currentUser.onLogOut();
     if(retVal=="success"){
-      //we want our homeScreen to be incharge of where we need to go
+      //we want our homeScreen to be incharge of where we need to go and now auth-status has been changed to notloggedin as currentUser will be null
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OurRoot()),(route)=>false);
     }
   }
@@ -67,12 +76,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _goToReview(){
     CurrentGroup _currentGrp=Provider.of<CurrentGroup>(context,listen: false);
+    //directed to OurReview page with currentGroup as currGrp
     Navigator.push(context, MaterialPageRoute(builder: (context)=>OurReview(currentGroup: _currentGrp)));
   }
   void _goToOthersReview(){
     CurrentGroup _currentGrp=Provider.of<CurrentGroup>(context,listen: false);
     Navigator.push(context, MaterialPageRoute(builder: (context)=>OthersReview(grpid: _currentGrp.getCurrentGroup.id!,bookid: _currentGrp.getCurrentBook.id,)));
   }
+  void _showReplaceBookAlert() {
+    _doneOnce=true;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Replace Current Book"),
+          content: Flexible(
+            child: Row(
+              children: [
+                Text("The current book is due for replacement.\n      Add from Replace Current Book"),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,17 +135,49 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: ourTheme().lightGreen,
       body: ListView(
         children: [
-          SizedBox(height: 20,),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 40,vertical: 1),
+            child: Row(
+              children: [
+                Icon(Icons.groups,color: Colors.brown,size: 50,),
+                // Text('Welcome to the group'+)
+                SizedBox(width: 10,),
+                Consumer<CurrentGroup>(
+                  builder: (BuildContext context, CurrentGroup value, Widget? child) {
+                    // Your widget tree goes here, you can use the `value` to access the CurrentGroup
+                    return Container(
+                      child: Text('Group:${value.getCurrentGroup.name}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.brown
+                      ),), // Example usage
+                    );
+                  },
+                )
+
+              ],
+            ),
+          ),
+          SizedBox(height: 4,),
           //just for demo will remove it afterwards
           Container(
             padding: EdgeInsets.all(30),
             margin: const EdgeInsets.symmetric(horizontal: 30),
             decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.green.withOpacity(0.3), // White shadow color with opacity
+                  spreadRadius: 5, // Spread radius
+                  blurRadius: 7, // Blur radius
+                  offset: Offset(0, 3), // Offset to control shadow position
+                ),
+              ],
               color: Colors.white,
               borderRadius: BorderRadius.circular(30),
             ),
             child: Consumer<CurrentGroup>(
-              //instead of using Provider.of() many times we can use Consumer widget where the parent of CurrentGroup Provider if HomeScreen
+              //instead of using Provider.of() many times we can use Consumer widget where the parent of CurrentGroup Provider is HomeScreen
               builder: (BuildContext context, value, Widget? child) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -135,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text(
                             // value.getCurrentGroup.currentBookDue != null
                             //     ? DateFormat.yMMMMd('en_US').add_jms().format(value.getCurrentGroup.currentBookDue!.toDate())
-                            //     : 'loading..',
+                            //    : 'loading..',
                             _timeUntil[0],
                             style: TextStyle(
                               color: Colors.black,
@@ -165,11 +234,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: Colors.brown,
                       ),
                       child: TextButton(onPressed: (){
-                        // _currentGrp.notifyListeners();
+                        // // _currentGrp.notifyListeners();
+                        // currentBookPending=!value.getDoneWithCurrentBook;
+                        // setState(() {
+                        //   //update the status of currentBookPending to false as getDoneWithCurrentBook is true
+                        // });
                         value.getDoneWithCurrentBook
                             ? _goToOthersReview()
                             : _goToReview();
+                        // setState(() {
+                        //
+                        // });
                       }, child: Text('Finish Book',style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.bold),)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          child: value.getDoneWithCurrentBook?Text('View-Reviews'):Text('Add-Review'),
+                      ),
                     ),
                   ],
 
@@ -177,7 +259,28 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
           ),
-          SizedBox(height: 15,),
+          SizedBox(height: 30,),
+          Consumer<CurrentGroup>(
+          builder: (BuildContext context, value, Widget? child) {
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 60),
+              // color: ourTheme().lightGreen,
+              height: 40.0,
+              decoration: BoxDecoration(color: Color(0xFF679289).withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(20)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Your Compeletion Status : ', style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),),
+                  value.getDoneWithCurrentBook ? Text('✅'):Text('❌') ,
+                ],
+              ),
+            );
+          }
+          ),
 //Add books for future studies->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
           // SizedBox(height: 20,),
           // Container(
@@ -245,7 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Icon(Icons.groups,color: Color(0xFF679289),),
                       SizedBox(width: 15,),
-                      Text('Back to Groups ',style: TextStyle(color: Color(0xFF679289),fontWeight:FontWeight.bold,decoration: TextDecoration.underline,fontSize: 18),),
+                      Text('Switch existing Group ',style: TextStyle(color: Color(0xFF679289),fontWeight:FontWeight.bold,decoration: TextDecoration.underline,fontSize: 18),),
                     ],
                   ),)),
           ),
@@ -257,7 +360,7 @@ class _HomeScreenState extends State<HomeScreen> {
               TextButton(onPressed: (){
                 CurrentGroup _currentGrp=Provider.of<CurrentGroup>(context,listen: false);
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>AllBooksOfGroup(grpid: _currentGrp.getCurrentGroup.id!, bookid: _currentGrp.getCurrentBook.id!)));
-              }, child: Text('View Previously Read Books',style: TextStyle(color: Colors.brown,fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'Cabin',decoration: TextDecoration.underline),)),
+              }, child: Text('View Previous Books Of Group',style: TextStyle(color: Colors.brown,fontSize: 20,fontWeight: FontWeight.bold,fontFamily: 'Cabin',decoration: TextDecoration.underline),)),
             ],
           ),
           SizedBox(height: 80,),

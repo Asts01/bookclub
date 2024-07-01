@@ -16,7 +16,7 @@ class OurTimeLeft{
     }else if(_secUntil>0){
       retVal.add(_secUntil.toString()+'sec');
     }else{
-      retVal.add("error");
+      retVal.add("REPLACE CURRENT BOOK from below ↓↓↓↓");
     }
     //next book is Reveled 7 days prior to the current-book-is-due
     Duration _timeUntilReveal=time.subtract(Duration(days: 7)).difference(DateTime.now());
@@ -33,7 +33,7 @@ class OurTimeLeft{
     }else if(_secUntilReveal>0){
       retVal.add(_secUntilReveal.toString()+'sec');
     }else{
-      retVal.add("error");
+      retVal.add("REPLACE CURRENT BOOK from below  ↓↓↓↓");
     }
 
     return retVal;

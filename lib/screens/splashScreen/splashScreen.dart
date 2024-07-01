@@ -15,9 +15,9 @@ class OurSplashScreen extends StatelessWidget {
             children: [
               SizedBox(height: 400,),
               Text('loading...',style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
-              TextButton(onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>OurLoginScreen()));
-                }, child: Text('Go to Login',style: TextStyle(decoration: TextDecoration.underline,color: Colors.blueAccent))),
+              // TextButton(onPressed: (){
+              //   Navigator.push(context, MaterialPageRoute(builder: (context)=>OurLoginScreen()));
+              //   }, child: Text('Go to Login',style: TextStyle(decoration: TextDecoration.underline,color: Colors.blueAccent))),
             ],
           ),
         )

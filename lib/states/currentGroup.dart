@@ -8,9 +8,10 @@ import 'package:flutter/cupertino.dart';
 class CurrentGroup extends ChangeNotifier{
   OurGroup _currentGroup=OurGroup();
   OurBook _currentBook=OurBook();
-  bool _doneWithCurrentBook=false;
+  //functionality of finish-book button
+  bool _doneWithCurrentBook=false;//a variable set to navigate to others-review and add-review screen
   //way to retrieve the book and grp info and return them else-where
-  OurGroup get getCurrentGroup=>_currentGroup;
+  OurGroup get getCurrentGroup=>_currentGroup;//current grp id and current book id are required by home screen
   OurBook get getCurrentBook=>_currentBook;
   bool get getDoneWithCurrentBook=>_doneWithCurrentBook;
   void notifyListeners(){
@@ -29,9 +30,10 @@ class CurrentGroup extends ChangeNotifier{
   //event to be triggered when the user presses finish-book
   void finishedBook(String uid,int rating,String review,String username)async{
     try{
-
+      //add the desired review and rating added by a particular user at a given time
+      //and then set _doneWithCurrentBook to true to direct user to Ratings page once the current book is finished
       await OurDatabase().finishedBook(_currentGroup.id!, _currentGroup.currentBookId!,uid, rating, review,username);
-      _doneWithCurrentBook=true;
+      _doneWithCurrentBook=true;//home page wale consumer widget ka data update
       notifyListeners();//update the local-state
     }catch(e){print(e);}
   }

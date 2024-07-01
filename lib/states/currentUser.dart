@@ -3,11 +3,12 @@ import 'package:bookclub/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+//this file contains login-Sign-up vali saari functionalities
 //Instead of displaying the manual SnackBar error msg->display the error msg
 class CurrentUser extends ChangeNotifier{
   //all the methods of login & sign-up sets the status of the currentUser inside the app
-  OurUser _currentUser=OurUser();
+  //all the properties of user are clubbed in OurUser class
+  OurUser _currentUser=OurUser();//_currentUser is private instance of OurUser for CurrentUser class
   //local state saving for email & password
   OurUser get getCurrentUser{return _currentUser;}
   FirebaseAuth _auth=FirebaseAuth.instance;
@@ -19,7 +20,8 @@ class CurrentUser extends ChangeNotifier{
       _currentUser.uid=authResult.user!.uid;
       _currentUser.email=authResult.user!.email;
       _currentUser.fullName=fullName;
-      String ?isUserIndb=await OurDatabase().createUser(_currentUser);//created user in db
+      //created the user in users collection and update the _currentUser by fetching details when logging-in
+      String ?isUserIndb=await OurDatabase().createUser(_currentUser);//created user in db->add method in db
       if(isUserIndb=="success")retval="success";
     }catch(e){
       retval=e.toString();
@@ -34,7 +36,7 @@ class CurrentUser extends ChangeNotifier{
       var _firebaseUser=await _auth.currentUser;
       // _currentUser.uid=_firebaseUser?.uid;
       // _currentUser.email=_firebaseUser!.email;
-      _currentUser=await OurDatabase().getUserInfo(_firebaseUser!.uid);
+      _currentUser=await OurDatabase().getUserInfo(_firebaseUser!.uid);//using get method in db
       if(_currentUser!=null) {
         retVal = "success";
       }

@@ -7,7 +7,7 @@ import 'package:bookclub/states/currentUser.dart';
 import 'package:intl/intl.dart';//for conversions of date-time into required formats
 
 class ChatScreen extends StatefulWidget {
-  String grpId;
+  String grpId;//messages are of particular group
   ChatScreen({required this.grpId});
 
   @override
@@ -16,7 +16,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   dynamic messageText;
-  TextEditingController messageController=new TextEditingController();
+  TextEditingController messageController=new TextEditingController();//for clearing the message
   FirebaseFirestore _firestore=FirebaseFirestore.instance;
   dynamic _stream;
   dynamic _currentUserName;
@@ -27,7 +27,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
   void initState() {
     // TODO: implement initState
-    getDetails();
+    getDetails();//useless bcoz streams are synchronous
     setState(() {
       _loading=false;
     });
@@ -91,7 +91,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   for(var msg in messages){
                     final dynamic _msg = msg['message'];
                     final dynamic _sender= msg['user'];
-                    final dynamic _timeFromDB=msg['time'];
+                    final dynamic _timeFromDB=msg['time'];//time jb vo db me add hue
                     final dynamic ddmmyyyy= DateFormat.Hm().format(_timeFromDB.toDate());
                     final dynamic date=DateFormat('dd/MM/yyyy').format(_timeFromDB.toDate());
                     // Output will be in hour:minute format (e.g., 12:34)

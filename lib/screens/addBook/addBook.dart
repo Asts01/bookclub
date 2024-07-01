@@ -9,6 +9,7 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:intl/intl.dart';
 
 //screen for updating the book of current-grp and adding book initially to a grp
+//this page is being used twice in the app-one for adding a book initially when the group gets created and secondly when current book being replaces
 class OurAddBook extends StatefulWidget {
 
   final bool onGrpCreation;
@@ -24,9 +25,10 @@ class _OurAddBookState extends State<OurAddBook> {
   TextEditingController _authorController=new TextEditingController();
   TextEditingController _lengthController=new TextEditingController();
 
-  DateTime _selectedDate=DateTime.now();
+  DateTime _selectedDate=DateTime.now();//the users sets this date and initially is current date and time as soon as user enters this page
 
   Future<void> selectedDate(BuildContext context)async{
+    //show-date time picker and set the selected date
     final DateTime? picked=await DatePicker.showDateTimePicker(context,showTitleActions: true,locale: LocaleType.en);
     if(picked!=null&&picked!=_selectedDate){
       _selectedDate=picked;
@@ -42,13 +44,15 @@ class _OurAddBookState extends State<OurAddBook> {
     //add a book also while creating a grp
     String _returnString;
     if(widget.onGrpCreation){
+      //create fresh new grp with user as leader and add a book to it
         _returnString=await OurDatabase().CreateGrp(grpName, _currentUser.getCurrentUser.uid,book);
     }else{
+      //change the current book alloicated for the existing grp
       _returnString=await OurDatabase().addBook(_currentUser.getCurrentUser.groupId!,book);
     }
 
     if(_returnString=="success"){
-      //since now grpId won't be null the user will navigate to HomeScreen
+      //since now grpId won't be null the user will navigate to HomeScreen and then the current groups book-id will always be updated on homeScreen
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OurRoot()), (route) => false);
     }
   }
@@ -61,8 +65,20 @@ class _OurAddBookState extends State<OurAddBook> {
           // SizedBox(height: 15,),
           Padding(padding: EdgeInsets.all(20),child: Row(
             children: <Widget>[
-              BackButton(
-                onPressed: (){Navigator.pop(context);},
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Colors.brown,
+                ),
+                child: BackButton(
+                  style: ButtonStyle(
+                    maximumSize: MaterialStateProperty.all<Size>(Size(40.0,40.0)),
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                  ),
+                  onPressed: (){Navigator.pop(context);
+                  },
+                ),
               ),
             ],
           ),),
@@ -139,7 +155,7 @@ class _OurAddBookState extends State<OurAddBook> {
                           ),
                           onPressed: (){
                             //brought from pvs screen
-                            OurBook book=OurBook();
+                            OurBook book=OurBook();//OurBook comes from book-model
                             book.name=_bookNameController.text;
                             book.author=_authorController.text;
                             book.length=_lengthController.text;

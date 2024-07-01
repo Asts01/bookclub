@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 class OurUser{
-  String ?uid;
+  String ?uid;//for the purpose of uniqueness in firebase
   String ?email;
   String ?fullName;
   dynamic ?accountCreated;//data-type defined for cloud-firestore

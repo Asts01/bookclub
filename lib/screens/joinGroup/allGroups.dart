@@ -1,3 +1,4 @@
+import 'package:bookclub/states/currentGroup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bookclub/services/database.dart';
 import 'package:bookclub/utils/ourTheme.dart';
@@ -8,7 +9,6 @@ import 'package:bookclub/screens/root/root.dart';
 
 class OurAllGroups extends StatefulWidget {
   const OurAllGroups({super.key});
-
   @override
   State<OurAllGroups> createState() => _OurAllGroupsState();
 }
@@ -24,76 +24,76 @@ class _OurAllGroupsState extends State<OurAllGroups> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ourTheme().lightGreen,
-      appBar: AppBar(
-        elevation: 5,
-        backgroundColor: Colors.brown,
-        title: Text('Existing Groups',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
-      ),
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                      child: Image.asset('assets/teamwork.png',width: 40,height: 40,),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.brown.withOpacity(0.5), // Shadow color
-                          spreadRadius: 5, // Spread radius
-                          blurRadius: 7, // Blur radius
-                          offset: Offset(0, 3), // Offset to control the position of the shadow
-                        ),
-                      ],
-
-                    ),
-                  ),
-                  Container(margin:EdgeInsets.symmetric(horizontal: 3),child: Text('Select a group to join',style: TextStyle(color: Colors.brown,fontWeight: FontWeight.w600,fontSize:18,fontFamily: 'Cabin',decoration: TextDecoration.underline,textBaseline: TextBaseline.alphabetic),)),
-                ],
-              ),
-            ),
-            SizedBox(height: 7,),
-            StreamBuilder(stream: _stream, builder: (context,snapshot){
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                // Show a loading indicator while waiting for data
-                return CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                // Show an error message if something goes wrong
-                return Text('Error: ${snapshot.error}');
-              } else if (!snapshot.hasData) {
-                // Show a message if there is no data available
-                return Center(child:Text('No grps available'));
-              }else{
-                QuerySnapshot querySnapshot = snapshot.data as QuerySnapshot;
-                List<GrpBubble>groups=[];
-
-                // Loop through each document snapshot and extract data
-                for (var doc in querySnapshot.docs) {
-                  String id=doc.id;
-                  Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-                  GrpBubble _bubble=GrpBubble(grpName: data['name'], grpLeader: data['leader'], grpId: id, currentBook: data['currentBookId'], members: data['members']);
-                  groups.add(_bubble);
-                }
-                String members="";
-                for(var x in groups[3].members){
-                  members+=x+' ';
-                }
-                return Expanded(child: ListView(
-                  children: groups,
-                ));
-
-              }
-            }),
-          ],
+        backgroundColor: ourTheme().lightGreen,
+        appBar: AppBar(
+          elevation: 5,
+          backgroundColor: Colors.brown,
+          title: Text('Existing Groups',style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
         ),
-      )
+        body: Container(
+          margin: EdgeInsets.symmetric(horizontal: 30,vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      child: Image.asset('assets/teamwork.png',width: 40,height: 40,),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.brown.withOpacity(0.5), // Shadow color
+                            spreadRadius: 5, // Spread radius
+                            blurRadius: 7, // Blur radius
+                            offset: Offset(0, 3), // Offset to control the position of the shadow
+                          ),
+                        ],
+
+                      ),
+                    ),
+                    Container(margin:EdgeInsets.symmetric(horizontal: 3),child: Text('Select a group to join',style: TextStyle(color: Colors.brown,fontWeight: FontWeight.w600,fontSize:18,fontFamily: 'Cabin',decoration: TextDecoration.underline,textBaseline: TextBaseline.alphabetic),)),
+                  ],
+                ),
+              ),
+              SizedBox(height: 7,),
+              StreamBuilder(stream: _stream, builder: (context,snapshot){
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Show a loading indicator while waiting for data
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  // Show an error message if something goes wrong
+                  return Text('Error: ${snapshot.error}');
+                } else if (!snapshot.hasData) {
+                  // Show a message if there is no data available
+                  return Center(child:Text('No grps available'));
+                }else{
+                  QuerySnapshot querySnapshot = snapshot.data as QuerySnapshot;
+                  List<GrpBubble>groups=[];
+
+                  // Loop through each document snapshot and extract data
+                  for (var doc in querySnapshot.docs) {
+                    String id=doc.id;
+                    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+                    GrpBubble _bubble=GrpBubble(grpName: data['name'], grpLeader: data['leader'], grpId: id, currentBook: data['currentBookId'], members: data['members']);
+                    groups.add(_bubble);
+                  }
+                  String members="";
+                  for(var x in groups[3].members){
+                    members+=x+' ';
+                  }
+                  return Expanded(child: ListView(
+                    children: groups,
+                  ));
+
+                }
+              }),
+            ],
+          ),
+        )
     );
   }
 }
@@ -140,9 +140,17 @@ class _GrpBubbleState extends State<GrpBubble> {
     callNamesFromIds();
   }
   void _joinGrp(BuildContext context,String grpId) async{
-    CurrentUser _currentUser=Provider.of<CurrentUser>(context,listen: false);//currentUser hold the reference of current user present in the app
+    CurrentUser _currentUser=Provider.of<CurrentUser>(context,listen: false);
+    // CurrentGroup _currentGrp=Provider.of<CurrentGroup>(context,listen: false);
+    print('Current group id'+_currentUser.getCurrentUser.groupId!);
+    print('New group id'+grpId);
+    // _currentGrp.updateStateFromDatabase(_currentUser.getCurrentUser.groupId!,_currentUser.getCurrentUser.uid!);
+    //currentUser hold the reference of current user present in the app
+    //->>>>>>> join the new-group
     String _returnString=await OurDatabase().JoinGrp(grpId, _currentUser.getCurrentUser.uid);
-    if(_returnString=="success"){
+    //->>>>>> leave the pvs-group
+    String _leftGroup=await OurDatabase().leaveGrp(_currentUser.getCurrentUser.groupId!, _currentUser.getCurrentUser.uid);
+    if(_returnString=="success" && _leftGroup=="success"){
       //since now grpId won't be null the user will navigate to HomeScreen
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>OurRoot()), (route) => false);
     }
@@ -222,4 +230,3 @@ class _GrpBubbleState extends State<GrpBubble> {
     );
   }
 }
-

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bookclub/utils/ourTheme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+//again stream of data from the books collection under the groups collection
 class AllBooksOfGroup extends StatefulWidget {
   String grpid;
   String bookid;
@@ -76,7 +77,7 @@ class _AllBooksOfGroupState extends State<AllBooksOfGroup> {
                       final dynamic author = msg['author'];
                       final dynamic length=msg['length'];
                       BookBubble _bubble=BookBubble(name: name,author: author,length: length,);
-                      if(msg.id!=widget.bookid)books.add(_bubble);
+                      if(msg.id!=widget.bookid)books.add(_bubble);//leaving the current book show all the books of the group
                     }
                     return Expanded(child: ListView(
                       children: books,

@@ -45,6 +45,7 @@ class OurDatabase{
     }
     return retVal;
   }
+  //creating grp as a leader and adding a current book to be read
   Future<String> CreateGrp(String groupName,dynamic uid,OurBook initialBook) async{
     String retVal="error";
     List<String> _members = [];
@@ -61,15 +62,16 @@ class OurDatabase{
       await _firestore.collection('users').doc(uid).update({
         'groupId':_docRef.id,
       });
-      //add a book to the current grp collection
+      //add a book to the current group collections to particular grp-id
       addBook(_docRef.id, initialBook);
       retVal="success";
     }catch(e){print(e);}
     return retVal;
   }
   Future<String> JoinGrp(String groupId,dynamic uid) async{
-    //existing rp ke memeber ne uid vala user add ho jayega
-    //uid users collection me ek naya member add ho jayega
+    //existing rp ke member ne uid vala user add ho jayega
+    //aur us-user ki grpid current-grp ki id set ho-jayegi
+    //bug->While leaving the existing group , remove yourself from its members list
     String retVal="error";
     List<String>_members=[];
     try{
@@ -86,16 +88,40 @@ class OurDatabase{
     }catch(e){print(e);}
     return retVal;
   }
+  // String _leftExisting =await OurDatabase().leaveGrp(_currentGroup.id,_currentUser.getCurrentUser.fullName);
+  Future<String> leaveGrp(String grpId,dynamic uid) async{
+    //if a person has not joined any group yet how he will leave the existing group
+
+    print("group id is null"+ grpId);
+    String retval="error";
+    List<String>_members=[];
+    try{
+      _members.add(uid);
+      await _firestore.collection('groups').doc(grpId).update({
+      //expects dynamic list of elements
+        'members':FieldValue.arrayRemove(_members),
+      });
+      retval="success";
+    }catch(e){
+      print("didnt left the existing group");
+    }
+    if(grpId==null)retval="success";
+    return retval;
+  }
+
+
   Future<String> addBook(String grpId,OurBook book) async{
     String retVal="success";
     //add book to the required grp can be while creating a grp initially or later modifying it
     try{
       //will be added into the book-list of particular grp and also now this book will the current book of particular-grp
+      //the current book which needs to be completed at the current instance of time
+      //and is displayed on the home-screen
       DocumentReference _docRef=await _firestore.collection('groups').doc(grpId).collection('books').add({
         'name':book.name,
         'author':book.author,
         'length':book.length,
-        'dateCompleted':book.dateCompleted,
+        'dateCompleted':book.dateCompleted,//set from date-time picker
       });
       //_docRef contains ref to the book-id
       //1 grp will only have 1 currentBookId
@@ -164,7 +190,7 @@ class OurDatabase{
             'rating':rating,
             'review':review,
             'user':username,
-            'date':formattedDate,
+            'date':formattedDate,//the date review was added into the reviews collection of the current-book
           });
       _retVal="success";
     }catch(e){print(e);}
@@ -189,7 +215,7 @@ class OurDatabase{
     var _stream=_firestore.collection('groups').doc(grpid).collection('books').doc(bookid).collection('reviews').snapshots();
     return _stream;
   }
-  //get stream of all the grp-id's
+  //get stream of all the grp-id's->to be show-cased on joinGroup Screen
   Stream<QuerySnapshot<Map<String,dynamic>>> getGroupStream(){
     //streams are synchoronous that's why they are streams
     var _stream=_firestore.collection('groups').snapshots();
@@ -235,6 +261,7 @@ class OurDatabase{
   Stream<QuerySnapshot<Map<String,dynamic>>> getAllbookStream(String grpid){
     //streams are synchoronous that's why they are streams
     //JISKA TIME SBSE JYADA H VO PEHLE AAYEGA->descending:true
+    //to be showed in readig history of group and reviews of all the books
     var _stream=_firestore.collection('groups').doc(grpid).collection('books').snapshots();
     return _stream;
   }

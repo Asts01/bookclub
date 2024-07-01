@@ -1,7 +1,7 @@
 import 'package:bookclub/screens/addBook/addBook.dart';
 import 'package:bookclub/utils/ourTheme.dart';
 import 'package:flutter/material.dart';
-
+//just static widget jiska kaam grp ka data aage paas krna h
 class OurCreateGroup extends StatefulWidget {
   const OurCreateGroup({super.key});
 
@@ -24,8 +24,20 @@ class _OurCreateGroupState extends State<OurCreateGroup> {
           SizedBox(height: 15,),
           Padding(padding: EdgeInsets.all(20),child: Row(
             children: <Widget>[
-              BackButton(
-                onPressed: (){Navigator.pop(context);},
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Colors.brown,
+                ),
+                child: BackButton(
+                  style: ButtonStyle(
+                    maximumSize: MaterialStateProperty.all<Size>(Size(40.0,40.0)),
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.brown),
+                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                  ),
+                  onPressed: (){Navigator.pop(context);
+                    },
+                ),
               ),
             ],
           ),),
@@ -65,7 +77,7 @@ class _OurCreateGroupState extends State<OurCreateGroup> {
                         ),
                           onPressed: (){
                           _goToAddBook(context, _groupNameController.text);
-                          }, child: Text('Add Book',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),)),
+                          }, child: Text('Create Group',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 20),)),
                       SizedBox(height: 20,),
                     ],
                   ),

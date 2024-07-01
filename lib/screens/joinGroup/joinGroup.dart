@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:bookclub/states/currentUser.dart';
 import 'package:bookclub/services/database.dart';
 import 'package:bookclub/screens/root/root.dart';
-
+//NOT OF USE KNOW AS WE ARE USING EXISTING GROUPS NOW TO USE THE USER TO GO TO HOME-SCREEN
 class JoinGroup extends StatefulWidget {
   const JoinGroup({super.key});
 

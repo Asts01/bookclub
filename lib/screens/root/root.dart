@@ -6,7 +6,7 @@ import 'package:bookclub/states/currentUser.dart';
 import 'package:flutter/material.dart';
 import 'package:bookclub/home/home.dart';
 import 'package:provider/provider.dart';
-//maintain authStatus on the basis of the data provided by the provider and direct the navigator accordingly.
+//maintain authStatus(enum what the condn is) on the basis of the data provided by the provider and direct the navigator accordingly.
 enum AuthStatus{unknown,notInGroup,notloggedIn,inGroup}//enum for directing the app to two different places
 
 class OurRoot extends StatefulWidget {
